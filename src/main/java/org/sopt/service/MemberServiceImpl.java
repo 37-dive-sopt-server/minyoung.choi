@@ -26,6 +26,10 @@ public class MemberServiceImpl implements MemberService {
         return member.getId();
     }
 
+    public boolean deleteByEmail(String email) {
+        return memberRepository.deleteByEmail(email);
+    }
+
     public Optional<Member> findAllMembersByEmail(String email) {
         return memberRepository.findAllByEmail(email);
     }

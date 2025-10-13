@@ -16,6 +16,10 @@ public class MemberController {
         return memberServiceImpl.join(name, email, birthDate, gender);
     }
 
+    public boolean deleteMemberByEmail(String email) {
+        return memberServiceImpl.deleteByEmail(email);
+    }
+
     public Optional<Member> findMemberById(Long id) {
         return memberServiceImpl.findOne(id);
     }
