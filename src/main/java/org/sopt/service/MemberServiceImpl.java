@@ -14,9 +14,20 @@ public class MemberServiceImpl implements MemberService {
     private static long sequence = 1L;
 
     public Long join(String name, String email, Timestamp birthDate, Gender gender) {
+        //이메일 중복 여부 확인
+        Optional<Member> existMemberByEmail = findAllMembersByEmail(email);
+        if (existMemberByEmail.isPresent()) {
+            //이미 해당 메일 사용하는 유저 있는경우 -> id값으로 null 값 리턴
+            return null;
+        }
+
         Member member = new Member(sequence++, name, email, birthDate, gender);
         memberRepository.save(member);
         return member.getId();
+    }
+
+    public Optional<Member> findAllMembersByEmail(String email) {
+        return memberRepository.findAllByEmail(email);
     }
 
     public Optional<Member> findOne(Long memberId) {
