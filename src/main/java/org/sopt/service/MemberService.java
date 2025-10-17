@@ -12,7 +12,7 @@ public interface MemberService {
 
     boolean deleteByEmail(String email);
 
-    Optional<Member> findOne(Long memberId);
+    Optional<Member> findOneById(String memberId);
 
     Optional<Member> findAllMembersByEmail(String email);
 
