@@ -15,8 +15,8 @@ public class Main {
     public static void main(String[] args) {
 
         MemoryMemberRepository memberRepository = new MemoryMemberRepository();
-        MemberServiceImpl memberService = new MemberServiceImpl();
-        MemberController memberController = new MemberController();
+        MemberServiceImpl memberService = new MemberServiceImpl(memberRepository);
+        MemberController memberController = new MemberController(memberService);
 
         Scanner scanner = new Scanner(System.in);
 
@@ -35,65 +35,39 @@ public class Main {
 
             switch (choice) {
                 case "1":
+                    // 회원 등록
                     System.out.print("등록할 회원 이름을 입력하세요: ");
                     String name = scanner.nextLine();
-                    if (name.trim().isEmpty()) {
-                        System.out.println("⚠️ 이름을 입력해주세요.");
-                        continue;
-                    }
 
                     System.out.print("등록할 회원 이메일을 입력하세요: ");
                     String email = scanner.nextLine();
-                    if (email.trim().isEmpty()) {
-                        System.out.println("⚠️ 이메일을 입력해주세요.");
-                        continue;
-                    }
 
-                    System.out.print("등록할 회원 생년월일을 입력하세요: yyyy-mm-dd");
-                    String birthDateStr = scanner.nextLine();
-                    Timestamp birthDate;
-                    try {
-                        birthDate = Timestamp.valueOf(birthDateStr + " 00:00:00");
-                    } catch (IllegalArgumentException e) {
-                        System.out.println("⚠️ 올바른 날짜 형식이 아닙니다. 예: 2000-01-01");
-                        continue;
-                    }
+                    System.out.print("등록할 회원 생년월일을 입력하세요: yyyy-mm-dd ");
+                    String birthDateInput = scanner.nextLine();
 
                     System.out.print("등록할 회원 성별(MALE/FEMALE)을 입력하세요: ");
-                    String genderStr = scanner.nextLine();
-                    Gender gender;
-                    try {
-                        gender = Gender.valueOf(genderStr.toUpperCase());
-                    } catch (IllegalArgumentException e) {
-                        System.out.println("⚠️ 올바른 성별을 입력해주세요 (MALE/FEMALE)");
-                        continue;
-                    }
+                    String genderInput = scanner.nextLine();
 
-                    Long createdId = memberController.createMember(name, email, birthDate, gender);
-                    if (createdId != null) {
-                        System.out.println("✅ 회원 등록 완료 (ID: " + createdId + ")");
+                    Long memberId = memberController.createMember(name, email, birthDateInput, genderInput);
+                    if (memberId != null) {
+                        System.out.println("✅ 회원 등록 완료 (ID: " + memberId + ")");
                     } else {
                         System.out.println("❌ 회원 등록 실패");
                     }
                     break;
 
                 case "2":
+                    // ID로 회원 조회
                     System.out.print("조회할 회원 ID를 입력하세요: ");
-                    try {
-                        Long id = Long.parseLong(scanner.nextLine());
-                        Optional<Member> foundMember = memberController.findMemberById(id);
-                        if (foundMember.isPresent()) {
-                            Member m = foundMember.get();
-                            System.out.println("✅ 조회된 회원: ID=" + m.getId() +
-                                    ", 이름=" + m.getName() +
-                                    ", 이메일=" + m.getEmail() +
-                                    ", 생년월일=" + m.getBirthDate() +
-                                    ", 성별=" + m.getGender());
-                        } else {
-                            System.out.println("⚠️ 해당 ID의 회원을 찾을 수 없습니다.");
-                        }
-                    } catch (NumberFormatException e) {
-                        System.out.println("❌ 유효하지 않은 ID 형식입니다. 숫자를 입력해주세요.");
+                    String id = scanner.nextLine();
+                    Optional<Member> foundMember = memberController.findMemberById(id);
+                    if (foundMember.isPresent()) {
+                        Member m = foundMember.get();
+                        System.out.println("✅ 조회된 회원: ID=" + m.getId() +
+                                ", 이름=" + m.getName() +
+                                ", 이메일=" + m.getEmail() +
+                                ", 생년월일=" + m.getBirthDate() +
+                                ", 성별=" + m.getGender());
                     }
                     break;
 
@@ -114,15 +88,10 @@ public class Main {
                     }
                     break;
 
-
                 case "4":
                     // 이메일로 회원 탈퇴
                     System.out.print("탈퇴할 회원 이메일을 입력하세요: ");
                     String emailToDelete = scanner.nextLine();
-                    if (emailToDelete.trim().isEmpty()) {
-                        System.out.println("⚠️ 이메일을 입력해주세요.");
-                        continue;
-                    }
                     boolean result = memberController.deleteMemberByEmail(emailToDelete);
                     if (result) {
                         System.out.println("✅ 회원 탈퇴 완료 (이메일: " + emailToDelete + ")");
@@ -135,6 +104,7 @@ public class Main {
                     System.out.println("👋 서비스를 종료합니다. 안녕히 계세요!");
                     scanner.close();
                     return;
+
                 default:
                     System.out.println("🚫 잘못된 메뉴 선택입니다. 다시 시도해주세요.");
             }
