@@ -41,4 +41,9 @@ public class MemberServiceImpl implements MemberService {
     public List<Member> findAllMembers() {
         return memberRepository.findAll();
     }
+    private void validateAge(Member member) {
+        if (member.getAge() < 20) {
+            throw new IllegalArgumentException("20세 미만은 가입할 수 없습니다.");
+        }
+    }
 }

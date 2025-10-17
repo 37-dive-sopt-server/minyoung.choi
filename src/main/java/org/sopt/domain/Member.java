@@ -37,4 +37,11 @@ public class Member {
     public Gender getGender() {
         return gender;
     }
+
+    public int getAge() {
+        LocalDate birthLocalDate = birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate nowDate = LocalDate.now();
+        return nowDate.getYear() - birthLocalDate.getYear() -
+                (nowDate.getDayOfYear() < birthLocalDate.getDayOfYear() ? 1 : 0);
+    }
 }
