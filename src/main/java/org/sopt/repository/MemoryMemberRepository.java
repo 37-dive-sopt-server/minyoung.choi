@@ -29,12 +29,11 @@ public class MemoryMemberRepository {
         return new ArrayList<>(store.values());
     }
 
-    public boolean deleteByEmail(String email) {
-        Optional<Member> memberOpt = findAllByEmail(email);
-        if (memberOpt.isPresent()) {
-            store.remove(memberOpt.get().getId());
-            return true;
-        }
-        return false;
+    public void deleteByEmail(Member member) {
+        store.remove(member.getId());
+    }
+
+    public void deleteById(Long id) {
+        store.remove(id);
     }
 }
