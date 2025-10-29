@@ -1,7 +1,7 @@
-package org.sopt.service;
+package org.sopt.member.service;
 
-import org.sopt.domain.Gender;
-import org.sopt.domain.Member;
+import org.sopt.member.domain.Gender;
+import org.sopt.member.domain.Member;
 
 import java.sql.Timestamp;
 import java.util.List;

@@ -1,4 +1,4 @@
-package org.sopt.controller;
+package org.sopt.member.controller;
 
 import org.sopt.domain.Member;
 import org.sopt.service.MemberServiceImpl;
