@@ -10,8 +10,15 @@ public class MemberController {
 
     private final MemberServiceImpl memberServiceImpl;
 
-    public MemberController(MemberServiceImpl memberServiceImpl) {
-        this.memberServiceImpl = memberServiceImpl;
+    @PostMapping
+    public ResponseEntity<MemberResponseDto> createMember(@RequestBody MemberRequestDto requestDto) {
+        Member member = memberServiceImpl.join(
+                requestDto.getName(),
+                requestDto.getEmail(),
+                requestDto.getBirthDate(),
+                requestDto.getGender()
+        );
+        return ResponseEntity.ok(MemberResponseDto.from(member));
     }
 
     public Long createMember(String name, String email, String birthDate, String gender) {
