@@ -30,8 +30,8 @@ public class MemoryMemberRepository {
         return new ArrayList<>(store.values());
     }
 
-    public void deleteByEmail(Member member) {
-        store.remove(member.getId());
+    public void deleteByEmail(String email) {
+        store.remove(findAllByEmail(email));
     }
 
     public void deleteById(Long id) {
