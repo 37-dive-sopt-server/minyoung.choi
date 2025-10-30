@@ -1,6 +1,5 @@
 package org.sopt.member.service;
 
-import lombok.RequiredArgsConstructor;
 import org.sopt.common.exception.CustomException;
 import org.sopt.common.exception.ErrorCode;
 import org.sopt.member.domain.Gender;
@@ -14,11 +13,14 @@ import java.time.Period;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
     private final MemoryMemberRepository memberRepository;
     private static long sequence = 1L;
+
+    public MemberServiceImpl(MemoryMemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
 
     @Override
     public Member join(String name, String email, String birthDateStr, String genderStr) {

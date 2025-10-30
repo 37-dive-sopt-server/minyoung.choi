@@ -1,6 +1,5 @@
 package org.sopt.member.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.sopt.member.dto.request.MemberRequestDto;
 import org.sopt.member.dto.response.MemberResponseDto;
 import org.sopt.member.service.MemberServiceImpl;
@@ -12,11 +11,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/users")
 public class MemberController {
 
     private final MemberServiceImpl memberServiceImpl;
+
+    public MemberController(MemberServiceImpl memberServiceImpl) {
+        this.memberServiceImpl = memberServiceImpl;
+    }
 
     @PostMapping
     public ResponseEntity<MemberResponseDto> createMember(@RequestBody MemberRequestDto requestDto) {
