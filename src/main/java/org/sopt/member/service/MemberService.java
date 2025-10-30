@@ -1,14 +1,11 @@
 package org.sopt.member.service;
 
-import org.sopt.member.domain.Gender;
 import org.sopt.member.domain.Member;
 
-import java.sql.Timestamp;
 import java.util.List;
-import java.util.Optional;
 
 public interface MemberService {
-    Member join(String name, String email, Timestamp birthDate, Gender gender);
+    Member join(String name, String email, String birthDateStr, String genderStr);
 
     void deleteByEmail(String email);
 

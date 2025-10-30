@@ -1,12 +1,15 @@
 package org.sopt.member.domain;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 public class Member {
 
     private Long id;
     private String name;
     private String email;
+    // TO DO 추후 LocalData로 수정예정
     private Timestamp birthDate;
     private Gender gender;
 

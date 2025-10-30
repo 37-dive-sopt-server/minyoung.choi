@@ -20,16 +20,13 @@ public class MemberServiceImpl implements MemberService {
     private final MemoryMemberRepository memberRepository;
     private static long sequence = 1L;
 
-    public MemberServiceImpl(MemoryMemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
-
     @Override
     public Member join(String name, String email, String birthDateStr, String genderStr) {
         validateName(name);
         validateEmailFormat(email);
         validateEmailDuplicated(email);
 
+        // TO DO 추후 LocalData로 수정예정
         Timestamp birthDate = parseBirthDate(birthDateStr);
         Gender gender = parseGender(genderStr);
 
