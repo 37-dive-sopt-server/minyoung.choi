@@ -8,13 +8,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MemberService {
-    Long join(String name, String email, Timestamp birthDate, Gender gender);
+    Member join(String name, String email, Timestamp birthDate, Gender gender);
 
-    boolean deleteByEmail(String email);
+    void deleteByEmail(String email);
 
-    Optional<Member> findOneById(String memberId);
+    void delete(Long memberId);
 
-    Optional<Member> findAllMembersByEmail(String email);
+    Member findOneById(Long memberId);
+
+    Member findAllMembersByEmail(String email);
 
     List<Member> findAllMembers();
 

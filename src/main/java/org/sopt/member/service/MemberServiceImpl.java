@@ -1,16 +1,20 @@
 package org.sopt.member.service;
 
+import lombok.RequiredArgsConstructor;
+import org.sopt.common.exception.CustomException;
+import org.sopt.common.exception.ErrorCode;
 import org.sopt.member.domain.Gender;
 import org.sopt.member.domain.Member;
 import org.sopt.member.repository.MemoryMemberRepository;
+import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
+import java.time.Period;
 import java.util.List;
-import java.util.Optional;
 
+@Service
+@RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
     private final MemoryMemberRepository memberRepository;
@@ -21,54 +25,49 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Long join(String name, String email, String birthDateStr, String genderStr) {
-        // 입력 검증
+    public Member join(String name, String email, String birthDateStr, String genderStr) {
         validateName(name);
         validateEmailFormat(email);
         validateEmailDuplicated(email);
 
-
-        Timestamp birthDate = validateBirthDate(birthDateStr);
-
-        Gender gender = validateGender(gender);
+        Timestamp birthDate = parseBirthDate(birthDateStr);
+        Gender gender = parseGender(genderStr);
 
         Member member = new Member(sequence++, name, email, birthDate, gender);
         validateAge(member);
 
         memberRepository.save(member);
-        return member.getId();
+        return member;
     }
 
     @Override
-    public boolean deleteByEmail(String email) {
+    public void deleteByEmail(String email) {
         validateEmailFormat(email);
-        Optional<Member> memberOpt = memberRepository.findAllByEmail(email);
-        if (memberOpt.isEmpty()) {
-            throw new IllegalArgumentException("해당 이메일의 회원을 찾을 수 없습니다.");
-        }
-        return memberRepository.deleteById(memberOpt.getId());
+
+        Member member = memberRepository.findAllByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        memberRepository.deleteById(member.getId());
     }
 
     @Override
-    public boolean delete(Long memberId) {
-        return memberRepository.deleteById(memberId);
+    public void delete(Long memberId) {
+        memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        memberRepository.deleteById(memberId);
     }
 
     @Override
-    public Optional<Member> findOneById(String memberIdStr) {
-        Long memberId;
-        try {
-            memberId = Long.parseLong(memberIdStr);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("⚠️ 유효하지 않은 ID 형식입니다. 숫자를 입력해주세요.");
-        }
-        return memberRepository.findById(memberId);
+    public Member findOneById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
-
     @Override
-    public Optional<Member> findAllMembersByEmail(String email) {
-        return memberRepository.findAllByEmail(email);
+    public Member findAllMembersByEmail(String email) {
+        return memberRepository.findAllByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
     @Override
@@ -78,38 +77,41 @@ public class MemberServiceImpl implements MemberService {
 
     private void validateName(String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("⚠️ 이름을 입력해주세요.");
+            throw new CustomException(ErrorCode.INVALID_INPUT);
         }
     }
 
     private void validateEmailFormat(String email) {
-        if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("⚠️ 이메일을 입력해주세요.");
-        }
-        if (!email.contains("@")) {  // @을 기준으로 단순 형식 검증
-            throw new IllegalArgumentException("⚠️ 올바른 이메일 형식이 아닙니다.");
+        if (email == null || email.isBlank() || !email.contains("@")) {
+            throw new CustomException(ErrorCode.INVALID_INPUT);
         }
     }
 
-    private Timestamp validateBirthDate(String birthDateStr) {
+    private void validateEmailDuplicated(String email) {
+        if (memberRepository.findAllByEmail(email).isPresent()) {
+            throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
+        }
+    }
+
+    private Timestamp parseBirthDate(String birthDateStr) {
         try {
             return Timestamp.valueOf(birthDateStr + " 00:00:00");
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("⚠️ 올바른 날짜 형식이 아닙니다. 예: 2000-01-01");
+            throw new CustomException(ErrorCode.INVALID_INPUT);
         }
     }
 
-    private Gender validateGender(String genderStr) {
+    private Gender parseGender(String genderStr) {
         try {
             return Gender.valueOf(genderStr.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("⚠️ 올바른 성별을 입력해주세요 (MALE/FEMALE)");
+            throw new CustomException(ErrorCode.INVALID_INPUT);
         }
     }
 
     private void validateAge(Member member) {
         if (member.getAge() < 20) {
-            throw new IllegalArgumentException("20세 미만은 가입할 수 없습니다.");
+            throw new CustomException(ErrorCode.UNDERAGE_MEMBER);
         }
     }
 }
