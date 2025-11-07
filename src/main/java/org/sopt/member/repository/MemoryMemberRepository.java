@@ -1,13 +1,14 @@
-package org.sopt.repository;
+package org.sopt.member.repository;
 
 import java.util.*;
 
-import org.sopt.domain.Member;
+import org.sopt.member.domain.Member;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class MemoryMemberRepository {
 
     private static final Map<Long, Member> store = new HashMap<>();
-
 
     public Member save(Member member) {
         store.put(member.getId(), member);
@@ -29,12 +30,11 @@ public class MemoryMemberRepository {
         return new ArrayList<>(store.values());
     }
 
-    public boolean deleteByEmail(String email) {
-        Optional<Member> memberOpt = findAllByEmail(email);
-        if (memberOpt.isPresent()) {
-            store.remove(memberOpt.get().getId());
-            return true;
-        }
-        return false;
+    public void deleteByEmail(String email) {
+        store.remove(findAllByEmail(email));
+    }
+
+    public void deleteById(Long id) {
+        store.remove(id);
     }
 }
