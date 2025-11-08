@@ -1,9 +1,16 @@
 package org.sopt.member.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
+@Getter
+@Builder
+@AllArgsConstructor
 public class Member {
 
     private Long id;
@@ -12,34 +19,6 @@ public class Member {
     // TO DO 추후 LocalData로 수정예정
     private Timestamp birthDate;
     private Gender gender;
-
-    public Member(Long id, String name, String email, Timestamp birthDate, Gender gender) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.birthDate = birthDate;
-        this.gender = gender;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public Timestamp getBirthDate() {
-        return birthDate;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
 
     public int getAge() {
         LocalDate birthLocalDate = birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
