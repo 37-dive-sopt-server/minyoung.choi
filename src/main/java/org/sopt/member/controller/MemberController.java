@@ -22,12 +22,7 @@ public class MemberController {
 
     @PostMapping
     public ResponseEntity<MemberResponseDto> createMember(@RequestBody MemberRequestDto requestDto) {
-        Member member = memberServiceImpl.join(
-                requestDto.getName(),
-                requestDto.getEmail(),
-                requestDto.getBirthDate(),
-                requestDto.getGender()
-        );
+        Member member = memberServiceImpl.join(requestDto);
         return ResponseEntity.ok(MemberResponseDto.from(member));
     }
 

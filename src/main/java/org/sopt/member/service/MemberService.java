@@ -1,11 +1,12 @@
 package org.sopt.member.service;
 
 import org.sopt.member.domain.Member;
+import org.sopt.member.dto.request.MemberRequestDto;
 
 import java.util.List;
 
 public interface MemberService {
-    Member join(String name, String email, String birthDateStr, String genderStr);
+    Member join(MemberRequestDto memberRequestDto);
 
     void deleteByEmail(String email);
 

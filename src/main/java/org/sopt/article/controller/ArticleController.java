@@ -20,12 +20,7 @@ public class ArticleController {
     // 아티클 생성
     @PostMapping
     public ResponseEntity<GetArticleResponseDto> createArticle(@RequestBody PostArticleRequestDto requestDto) {
-        Article article = articleServiceImpl.createArticle(
-                requestDto.title(),
-                requestDto.content(),
-                requestDto.tag(),
-                requestDto.authorId()
-        );
+        Article article = articleServiceImpl.createArticle(requestDto);
         return ResponseEntity.ok(GetArticleResponseDto.from(article));
     }
 

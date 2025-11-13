@@ -3,6 +3,7 @@ package org.sopt.article.service;
 import lombok.RequiredArgsConstructor;
 import org.sopt.article.domain.Article;
 import org.sopt.article.domain.Tag;
+import org.sopt.article.dto.request.PostArticleRequestDto;
 import org.sopt.article.repository.ArticleRepository;
 import org.sopt.common.exception.CustomException;
 import org.sopt.common.exception.ErrorCode;
@@ -25,19 +26,22 @@ public class ArticleServiceImpl implements ArticleService {
     public Article createArticle(String title, String content, String tagStr, Long authorId) {
         validateTitle(title);
         validateTitleDuplicated(title);
+    public Article createArticle(PostArticleRequestDto requestDto) {
+        Validator.validateTitle(requestDto.title());
+        validateTitleDuplicated(requestDto.title());
 
         // 작성자 유효 검증
-        memberServiceImpl.findOneById(authorId);
+        memberServiceImpl.findOneById(requestDto.authorId());
 
-        Tag tag = parseTag(tagStr);
+        Tag tag = parseTag(requestDto.tag());
 
         Article article = Article.builder()
                 .id(sequence++)
-                .title(title)
-                .content(content)
+                .title(requestDto.title())
+                .content(requestDto.content())
                 .tag(tag)
                 .created(Timestamp.valueOf(LocalDateTime.now()))
-                .authorId(authorId)
+                .authorId(requestDto.authorId())
                 .build();
 
         articleRepository.save(article);

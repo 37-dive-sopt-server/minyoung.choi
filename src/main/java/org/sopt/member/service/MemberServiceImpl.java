@@ -4,6 +4,7 @@ import org.sopt.common.exception.CustomException;
 import org.sopt.common.exception.ErrorCode;
 import org.sopt.member.domain.Gender;
 import org.sopt.member.domain.Member;
+import org.sopt.member.dto.request.MemberRequestDto;
 import org.sopt.member.repository.MemoryMemberRepository;
 import org.springframework.stereotype.Service;
 
@@ -23,16 +24,16 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member join(String name, String email, String birthDateStr, String genderStr) {
-        validateName(name);
-        validateEmailFormat(email);
-        validateEmailDuplicated(email);
+    public Member join(MemberRequestDto memberRequestDto) {
+        validateName(memberRequestDto.getName());
+        validateEmailFormat(memberRequestDto.getEmail());
+        validateEmailDuplicated(memberRequestDto.getEmail());
 
         // TO DO 추후 LocalData로 수정예정
-        Timestamp birthDate = parseBirthDate(birthDateStr);
-        Gender gender = parseGender(genderStr);
+        Timestamp birthDate = parseBirthDate(memberRequestDto.getBirthDate());
+        Gender gender = parseGender(memberRequestDto.getGender());
 
-        Member member = new Member(sequence++, name, email, birthDate, gender);
+        Member member = new Member(sequence++, memberRequestDto.getName(), memberRequestDto.getEmail(), birthDate, gender);
         validateAge(member);
 
         memberRepository.save(member);
