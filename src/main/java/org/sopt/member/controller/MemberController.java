@@ -1,6 +1,7 @@
 package org.sopt.member.controller;
 
 import org.sopt.member.dto.request.MemberRequestDto;
+import org.sopt.member.dto.response.GetAllMemberDto;
 import org.sopt.member.dto.response.MemberResponseDto;
 import org.sopt.member.service.MemberServiceImpl;
 import org.sopt.member.domain.Member;
@@ -33,12 +34,15 @@ public class MemberController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MemberResponseDto>> getAllMembers() {
+    public ResponseEntity<GetAllMemberDto> getAllMembers() {
         List<MemberResponseDto> members = memberServiceImpl.findAllMembers()
                 .stream()
                 .map(MemberResponseDto::from)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(members);
+
+        GetAllMemberDto response = new GetAllMemberDto(members);
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping
