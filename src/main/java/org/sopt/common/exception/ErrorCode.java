@@ -11,6 +11,12 @@ public enum ErrorCode {
     DUPLICATE_TITLE(HttpStatus.CONFLICT, "중복된 제목입니다."),
 
     INVALID_INPUT(HttpStatus.BAD_REQUEST, "요청 값이 올바르지 않습니다."),
+    INVALID_BIRTH_INPUT(HttpStatus.BAD_REQUEST, "생일 입력 값이 올바르지 않습니다."),
+    INVALID_GENDER_INPUT(HttpStatus.BAD_REQUEST, "성별 입력 값이 올바르지 않습니다."),
+    INVALID_TITLE_INPUT(HttpStatus.BAD_REQUEST, "제목 입력 형식이 올바르지 않습니다."),
+    INVALID_TAG_INPUT(HttpStatus.BAD_REQUEST, "태그 입력 값이 올바르지 않습니다."),
+    INVALID_EMAIL_INPUT(HttpStatus.BAD_REQUEST, "이메일 입력 형식이 올바르지 않습니다."),
+
     UNDERAGE_MEMBER(HttpStatus.BAD_REQUEST, "20세 미만은 가입할 수 없습니다."),
 
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류가 발생했습니다.");

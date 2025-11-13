@@ -9,7 +9,7 @@ public class Validator {
 
     public static void validateEmailFormat(String email) {
         if (email == null || email.isBlank() || !email.contains("@")) {
-            throw new CustomException(ErrorCode.INVALID_INPUT);
+            throw new CustomException(ErrorCode.INVALID_EMAIL_INPUT);
         }
     }
 
