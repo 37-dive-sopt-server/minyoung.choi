@@ -30,8 +30,7 @@ public class MemberServiceImpl implements MemberService {
         Validator.validateEmailFormat(memberRequestDto.getEmail());
         validateEmailDuplicated(memberRequestDto.getEmail());
 
-        // TO DO 추후 LocalData로 수정예정
-        Timestamp birthDate = parseBirthDate(memberRequestDto.getBirthDate());
+        LocalDate birthDate = parseBirthDate(memberRequestDto.getBirthDate());
         Gender gender = parseGender(memberRequestDto.getGender());
 
         Member member = new Member(sequence++, memberRequestDto.getName(), memberRequestDto.getEmail(), birthDate, gender);
@@ -82,11 +81,11 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-    private Timestamp parseBirthDate(String birthDateStr) {
+    private LocalDate parseBirthDate(String birthDateStr) {
         try {
-            return Timestamp.valueOf(birthDateStr + " 00:00:00");
+            return LocalDate.parse(birthDateStr);
         } catch (IllegalArgumentException e) {
-            throw new CustomException(ErrorCode.INVALID_INPUT);
+            throw new CustomException(ErrorCode.INVALID_BIRTH_INPUT);
         }
     }
 
@@ -94,7 +93,7 @@ public class MemberServiceImpl implements MemberService {
         try {
             return Gender.valueOf(genderStr.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new CustomException(ErrorCode.INVALID_INPUT);
+            throw new CustomException(ErrorCode.INVALID_GENDER_INPUT);
         }
     }
 
