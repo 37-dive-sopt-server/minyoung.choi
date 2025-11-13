@@ -2,6 +2,7 @@ package org.sopt.member.service;
 
 import org.sopt.common.exception.CustomException;
 import org.sopt.common.exception.ErrorCode;
+import org.sopt.common.validator.Validator;
 import org.sopt.member.domain.Gender;
 import org.sopt.member.domain.Member;
 import org.sopt.member.dto.request.MemberRequestDto;
@@ -25,8 +26,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member join(MemberRequestDto memberRequestDto) {
-        validateName(memberRequestDto.getName());
-        validateEmailFormat(memberRequestDto.getEmail());
+        Validator.validateName(memberRequestDto.getName());
+        Validator.validateEmailFormat(memberRequestDto.getEmail());
         validateEmailDuplicated(memberRequestDto.getEmail());
 
         // TO DO 추후 LocalData로 수정예정
@@ -34,7 +35,7 @@ public class MemberServiceImpl implements MemberService {
         Gender gender = parseGender(memberRequestDto.getGender());
 
         Member member = new Member(sequence++, memberRequestDto.getName(), memberRequestDto.getEmail(), birthDate, gender);
-        validateAge(member);
+        Validator.validateAge(member);
 
         memberRepository.save(member);
         return member;
@@ -42,7 +43,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void deleteByEmail(String email) {
-        validateEmailFormat(email);
+        Validator.validateEmailFormat(email);
 
         Member member = memberRepository.findAllByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
@@ -75,18 +76,6 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.findAll();
     }
 
-    private void validateName(String name) {
-        if (name == null || name.isBlank()) {
-            throw new CustomException(ErrorCode.INVALID_INPUT);
-        }
-    }
-
-    private void validateEmailFormat(String email) {
-        if (email == null || email.isBlank() || !email.contains("@")) {
-            throw new CustomException(ErrorCode.INVALID_INPUT);
-        }
-    }
-
     private void validateEmailDuplicated(String email) {
         if (memberRepository.findAllByEmail(email).isPresent()) {
             throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
@@ -109,9 +98,4 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-    private void validateAge(Member member) {
-        if (member.getAge() < 20) {
-            throw new CustomException(ErrorCode.UNDERAGE_MEMBER);
-        }
-    }
 }

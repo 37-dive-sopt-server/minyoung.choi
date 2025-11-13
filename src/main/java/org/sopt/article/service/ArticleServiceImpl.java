@@ -7,6 +7,7 @@ import org.sopt.article.dto.request.PostArticleRequestDto;
 import org.sopt.article.repository.ArticleRepository;
 import org.sopt.common.exception.CustomException;
 import org.sopt.common.exception.ErrorCode;
+import org.sopt.common.validator.Validator;
 import org.sopt.member.service.MemberServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +24,6 @@ public class ArticleServiceImpl implements ArticleService {
     private static long sequence = 1L;
 
     @Override
-    public Article createArticle(String title, String content, String tagStr, Long authorId) {
-        validateTitle(title);
-        validateTitleDuplicated(title);
     public Article createArticle(PostArticleRequestDto requestDto) {
         Validator.validateTitle(requestDto.title());
         validateTitleDuplicated(requestDto.title());
@@ -59,12 +57,6 @@ public class ArticleServiceImpl implements ArticleService {
         return articleRepository.findAll();
     }
 
-    private void validateTitle(String title) {
-        if (title == null || title.isBlank()) {
-            throw new CustomException(ErrorCode.INVALID_INPUT);
-        }
-    }
-
     private void validateTitleDuplicated(String title) {
         if (articleRepository.findByTitle(title).isPresent()) {
             throw new CustomException(ErrorCode.DUPLICATE_TITLE);
@@ -75,7 +67,7 @@ public class ArticleServiceImpl implements ArticleService {
         try {
             return Tag.valueOf(tagStr.toUpperCase());
         } catch (Exception e) {
-            throw new CustomException(ErrorCode.INVALID_INPUT);
+            throw new CustomException(ErrorCode.INVALID_TAG_INPUT);
         }
     }
 }
