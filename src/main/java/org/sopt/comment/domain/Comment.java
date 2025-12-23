@@ -16,4 +16,13 @@ public class Comment {
     private String content;
     private LocalDate created;
     private CommentStatus commentStatus;
+
+    public void setStatusDeleted(){
+        commentStatus = CommentStatus.DELETED;
+    }
+
+
+    public void setContent(String content){
+        this.content = content;
+    }
 }
