@@ -1,11 +1,12 @@
 package org.sopt.article.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.sopt.article.domain.Article;
 import org.sopt.article.dto.request.PostArticleRequestDto;
+import org.sopt.article.dto.response.GetArticleDetailResponseDto;
 import org.sopt.article.dto.response.GetArticleResponseDto;
 import org.sopt.article.service.ArticleService;
-import org.sopt.member.service.MemberService;
+import org.sopt.comment.domain.Comment;
+import org.sopt.comment.service.CommentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,9 +17,11 @@ import java.util.List;
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final CommentService commentService;
 
-    public ArticleController(ArticleService articleService) {
+    public ArticleController(ArticleService articleService, CommentService commentService) {
         this.articleService = articleService;
+        this.commentService = commentService;
     }
 
     // 아티클 생성
@@ -30,9 +33,10 @@ public class ArticleController {
 
     // 단일 조회
     @GetMapping("/{id}")
-    public ResponseEntity<GetArticleResponseDto> getArticle(@PathVariable Long id) {
+    public ResponseEntity<GetArticleDetailResponseDto> getArticle(@PathVariable Long id) {
         Article article = articleService.findArticleById(id);
-        return ResponseEntity.ok(GetArticleResponseDto.from(article));
+        List<Comment> commentList = commentService.findAllCommentsByPostId(id);
+        return ResponseEntity.ok(GetArticleDetailResponseDto.from(article, commentList));
     }
 
     // 전체 조회
