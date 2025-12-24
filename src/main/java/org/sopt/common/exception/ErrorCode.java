@@ -6,6 +6,7 @@ public enum ErrorCode {
 
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "회원 정보를 찾을 수 없습니다."),
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 글을 찾을 수 없습니다."),
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 댓글이 존재하지 않습니다."),
 
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, "이미 가입된 이메일입니다."),
     DUPLICATE_TITLE(HttpStatus.CONFLICT, "중복된 제목입니다."),
@@ -16,8 +17,10 @@ public enum ErrorCode {
     INVALID_TITLE_INPUT(HttpStatus.BAD_REQUEST, "제목 입력 형식이 올바르지 않습니다."),
     INVALID_TAG_INPUT(HttpStatus.BAD_REQUEST, "태그 입력 값이 올바르지 않습니다."),
     INVALID_EMAIL_INPUT(HttpStatus.BAD_REQUEST, "이메일 입력 형식이 올바르지 않습니다."),
-
+    INVALID_COMMENT_LENGTH_INPUT(HttpStatus.BAD_REQUEST, "댓글 길이가 300자를 초과했습니다."),
     UNDERAGE_MEMBER(HttpStatus.BAD_REQUEST, "20세 미만은 가입할 수 없습니다."),
+
+    UNAUTHORIZED_USER_REQUEST(HttpStatus.UNAUTHORIZED, "해당 유저는 댓글 수정 및 삭제 권한이 없습니다."),
 
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류가 발생했습니다.");
 

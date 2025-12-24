@@ -6,7 +6,6 @@ import org.sopt.member.domain.Member;
 
 public class Validator {
 
-
     public static void validateEmailFormat(String email) {
         if (email == null || email.isBlank() || !email.contains("@")) {
             throw new CustomException(ErrorCode.INVALID_EMAIL_INPUT);
@@ -28,6 +27,12 @@ public class Validator {
     public static void validateTitle(String title) {
         if (title == null || title.isBlank()) {
             throw new CustomException(ErrorCode.INVALID_TITLE_INPUT);
+        }
+    }
+
+    public static void validateCommentLength(String content) {
+        if (content.length() > 300) {
+            throw new CustomException(ErrorCode.INVALID_COMMENT_LENGTH_INPUT);
         }
     }
 }
