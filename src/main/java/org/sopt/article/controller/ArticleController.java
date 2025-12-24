@@ -3,6 +3,7 @@ package org.sopt.article.controller;
 import org.sopt.article.domain.Article;
 import org.sopt.article.dto.request.PostArticleRequestDto;
 import org.sopt.article.dto.response.GetArticleDetailResponseDto;
+import org.sopt.article.dto.response.GetArticlePreviewResponseDto;
 import org.sopt.article.dto.response.GetArticleResponseDto;
 import org.sopt.article.service.ArticleService;
 import org.sopt.comment.domain.Comment;
@@ -41,10 +42,10 @@ public class ArticleController {
 
     // 전체 조회
     @GetMapping
-    public ResponseEntity<List<GetArticleResponseDto>> getAllArticles() {
-        List<GetArticleResponseDto> articles = articleService.findAllArticles()
+    public ResponseEntity<List<GetArticlePreviewResponseDto>> getAllArticles() {
+        List<GetArticlePreviewResponseDto> articles = articleService.findAllArticles()
                 .stream()
-                .map(GetArticleResponseDto::from)
+                .map(GetArticlePreviewResponseDto::from)
                 .toList();
         return ResponseEntity.ok(articles);
     }
