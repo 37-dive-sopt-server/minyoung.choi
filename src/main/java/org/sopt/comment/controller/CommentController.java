@@ -23,15 +23,15 @@ public class CommentController {
     // 댓글 생성
     @PostMapping
     public ResponseEntity<GetCommentResponseDto> createComment(@RequestBody PostCommentRequestDto requestDto) {
-        Comment Comment = commentService.createComment(requestDto);
-        return ResponseEntity.ok(GetCommentResponseDto.from(Comment));
+        Comment comment = commentService.createComment(requestDto);
+        return ResponseEntity.ok(GetCommentResponseDto.from(comment));
     }
 
     // 단일 조회
     @GetMapping("/{id}")
     public ResponseEntity<GetCommentResponseDto> getComment(@PathVariable Long id) {
-        Comment Comment = commentService.findCommentById(id);
-        return ResponseEntity.ok(GetCommentResponseDto.from(Comment));
+        Comment comment = commentService.findCommentById(id);
+        return ResponseEntity.ok(GetCommentResponseDto.from(comment));
     }
 
     // 글 아이디 기준으로 전체 조회
@@ -48,8 +48,8 @@ public class CommentController {
     @PatchMapping("/{id}")
     public ResponseEntity<GetCommentResponseDto> updateComment(@RequestBody UpdateCommentRequestDto requestDto,
                                                                @PathVariable Long id) {
-        Comment Comment = commentService.updateComment(id, requestDto.content(),requestDto.requestUserId());
-        return ResponseEntity.ok(GetCommentResponseDto.from(Comment));
+        Comment comment = commentService.updateComment(id, requestDto.content(),requestDto.requestUserId());
+        return ResponseEntity.ok(GetCommentResponseDto.from(comment));
     }
 
     // 단일 삭제
